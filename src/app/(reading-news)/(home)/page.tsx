@@ -1,7 +1,14 @@
+import { stripe } from '@/app/services/stripe';
 import SubscribeButton from '@/components/subscribe-button';
 import Image from 'next/image';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const price = await stripe.prices.retrieve('price_1PVX1ARrH3ggrWH5BujbYNY2');
+  const product = {
+    priceId: price.id,
+    amount: (price.unit_amount ?? 0) / 100,
+  };
+
   return (
     <main className="flex px-24 pt-32">
       <section className="flex flex-col gap-6">
@@ -11,9 +18,16 @@ export default function HomePage() {
         </h1>
         <div>
           <p>Get acess to all the publications</p>
-          <p className="text-blue-300">for $9.90 month</p>
+          <p className="text-blue-300">
+            for{' '}
+            {product.amount.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+            })}{' '}
+            month
+          </p>
         </div>
-        <SubscribeButton />
+        <SubscribeButton priceId={product.priceId} />
       </section>
       <section>
         <Image
