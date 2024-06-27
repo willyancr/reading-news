@@ -1,10 +1,14 @@
-import Header from '@/components/header';
+'use client';
 
+import Header from '@/components/header';
+import { SessionProvider } from 'next-auth/react';
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <section className="mx-auto min-h-screen w-full max-w-[1600px]">
-      <Header />
-      {children}
-    </section>
+    <SessionProvider>
+      <section className="mx-auto min-h-screen w-full max-w-[1600px]">
+        <Header />
+        {children}
+      </section>
+    </SessionProvider>
   );
 }
