@@ -2,12 +2,17 @@ import { stripe } from '@/app/services/stripe';
 import SubscribeButton from '@/components/subscribe-button';
 import Image from 'next/image';
 
-export default async function HomePage() {
+export async function getPriceStripe() {
   const price = await stripe.prices.retrieve('price_1PVX1ARrH3ggrWH5BujbYNY2');
   const product = {
     priceId: price.id,
     amount: (price.unit_amount ?? 0) / 100,
   };
+  return product;
+}
+
+export default async function HomePage() {
+  const product = await getPriceStripe();
 
   return (
     <main className="flex px-24 pt-32">
