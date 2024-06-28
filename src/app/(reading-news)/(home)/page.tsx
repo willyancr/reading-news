@@ -13,6 +13,7 @@ export async function getPriceStripe() {
 
 export default async function HomePage() {
   const product = await getPriceStripe();
+  
 
   return (
     <main className="flex px-24 pt-32">
