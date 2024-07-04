@@ -5,7 +5,9 @@ import { FiX } from 'react-icons/fi';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
 export default function SignInButton() {
-  const { data: session } = useSession();
+   // Aqui estamos pegando a sessão do usuário
+   // e armazenando o resultado em uma constante chamada session.
+   const { data: session } = useSession();
 
   return session ? (
     <button
