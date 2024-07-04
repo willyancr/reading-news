@@ -1,9 +1,10 @@
 import GitHubProvider from 'next-auth/providers/github';
-import NextAuth from 'next-auth';
-import { query as q } from 'faunadb';
 import { fauna } from '@/app/services/fauna';
+import { NextAuthOptions } from 'next-auth';
+import { query as q } from 'faunadb';
+import NextAuth from 'next-auth';
 
-const handler = NextAuth({
+export const authOptions: NextAuthOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
@@ -45,6 +46,9 @@ const handler = NextAuth({
       }
     },
   },
-});
+  secret: process.env.NEXTAUTH_SECRET,
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
