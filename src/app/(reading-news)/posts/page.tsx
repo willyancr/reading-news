@@ -3,6 +3,7 @@ import { RichTextField } from '@prismicio/types';
 import { RTTextNode } from '@prismicio/client';
 import { createClient } from '@/prismicio';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
 interface PostData {
   title: RichTextField;
@@ -14,6 +15,10 @@ export interface Posts {
   uid: string;
   first_publication_date: string;
 }
+
+export const metadata: Metadata = {
+  title: 'Posts',
+};
 
 export default async function PostPage() {
   const posts = await getPrismic();

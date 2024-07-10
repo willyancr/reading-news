@@ -1,6 +1,11 @@
-import { stripe } from '@/app/services/stripe';
 import SubscribeButton from '@/components/subscribe-button';
+import { stripe } from '@/app/services/stripe';
+import { Metadata } from 'next';
 import Image from 'next/image';
+
+export const metadata: Metadata = {
+  title: 'Home',
+};
 
 export async function getPriceStripe() {
   const price = await stripe.prices.retrieve('price_1PVX1ARrH3ggrWH5BujbYNY2');
@@ -13,7 +18,6 @@ export async function getPriceStripe() {
 
 export default async function HomePage() {
   const product = await getPriceStripe();
-  
 
   return (
     <main className="flex px-24 pt-32">

@@ -8,7 +8,10 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'Reading News',
+  title: {
+    template: '%s | Reading News',
+    default: 'Reading News',
+  },
   description: 'Service for reading news',
 };
 

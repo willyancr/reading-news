@@ -1,12 +1,16 @@
 import { PrismicRichText } from '@prismicio/react';
 import { createClient } from '@/prismicio';
 import { Posts } from '../page';
+import { Metadata } from 'next';
 
 interface Params {
   params: {
     slug: string;
   };
 }
+export const metadata: Metadata = {
+  title: 'Content Post',
+};
 
 export default async function ContentPostPage({ params }: Params) {
   const post = await getPrismic({ params });
