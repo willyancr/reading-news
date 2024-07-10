@@ -1,10 +1,8 @@
+import { saveSubscription } from '../_lib/manageSubscription';
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/app/services/stripe';
 import { Readable } from 'stream';
 import Stripe from 'stripe';
-import { saveSubscription } from '../_lib/manageSubscription';
-
-const endpointSecret = process.env.STRIPE_WEBHOOKS_SECRET as string;
 
 export const config = {
   api: {
@@ -22,7 +20,13 @@ async function buffer(readable: Readable) {
   return Buffer.concat(chunks);
 }
 
-const relevantEvents = new Set(['checkout.session.completed']);
+const relevantEvents = new Set([
+  'checkout.session.completed',
+  'customer.subscription.updated',
+  'customer.subscription.deleted',
+]);
+
+const endpointSecret = process.env.STRIPE_WEBHOOKS_SECRET as string;
 
 export async function POST(req: NextRequest) {
   try {
@@ -44,12 +48,23 @@ export async function POST(req: NextRequest) {
 
     if (relevantEvents.has(type)) {
       switch (type) {
+        case 'customer.subscription.updated':
+        case 'customer.subscription.deleted':
+          const subscription = event.data.object as Stripe.Subscription;
+          await saveSubscription(
+            subscription.id,
+            subscription.customer.toString(),
+            false,
+          );
+          break;
+
         case 'checkout.session.completed':
           const checkoutSession = event.data.object as Stripe.Checkout.Session;
 
           await saveSubscription(
             checkoutSession.subscription?.toString() || '',
             checkoutSession.customer?.toString() || '',
+            true,
           );
 
           break;

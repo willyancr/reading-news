@@ -8,11 +8,12 @@ import { query as q } from 'faunadb';
  * Recebe o ID da subscription e o ID do customer que a possui.
  * Busca o ref do usuário que possui a subscription no banco de dados FaunaDB
  * e cria um novo documento na coleção 'subscription' com os dados da subscription.
- * 
+ *
  */
 export async function saveSubscription(
   subscriptionId: string,
   customerId: string,
+  createAction = false,
 ) {
   // Busca o ref do usuário que possui a subscription no banco de dados FaunaDB
   const userRef = await fauna.query(
@@ -31,9 +32,25 @@ export async function saveSubscription(
     price_id: subscription.items.data[0].price.id,
   };
 
-  await fauna.query(
-    q.Create(q.Collection('subscription'), {
-      data: subscriptionData,
-    }),
-  );
+  // Se a ação for de criação, cria um novo documento na coleção 'subscription'
+  // com os dados da subscription.
+  if (createAction) {
+    await fauna.query(
+      q.Create(q.Collection('subscription'), {
+        data: subscriptionData,
+      }),
+    );
+  } else {
+    // Se a ação não for de criação, substitui os dados da subscription
+    // com os mesmos dados na coleção 'subscription' com o ID correspondente.
+    await fauna.query(
+      q.Replace(
+        q.Select(
+          'ref',
+          q.Get(q.Match(q.Index('subscription_by_id'), subscriptionId)),
+        ),
+        { data: subscriptionData },
+      ),
+    );
+  }
 }
