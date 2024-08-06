@@ -2,8 +2,8 @@ import { PrismicRichText } from '@prismicio/react';
 import { RichTextField } from '@prismicio/types';
 import { RTTextNode } from '@prismicio/client';
 import { createClient } from '@/prismicio';
-import Link from 'next/link';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 interface PostData {
   title: RichTextField;
@@ -30,13 +30,13 @@ export default async function PostPage() {
           className="border-b-2 border-zinc-800 pb-6 mb-8 max-w-[860px]"
           key={post.uid}
         >
-          <p className="text-zinc-400 text-sm mb-5">
+          <time className="text-zinc-400 text-sm">
             {post.first_publication_date}
-          </p>
+          </time>
           <Link href={`/posts/${post.uid}`}>
-            <h2 className="text-3xl font-bold mb-2 hover:text-yellow-500 transition">
+            <h1 className="text-3xl font-bold mb-2 hover:text-yellow-500 transition">
               {post.title}
-            </h2>
+            </h1>
           </Link>
           <p className="text-zinc-400 text-sm mb-4">{post.content}</p>
         </div>
